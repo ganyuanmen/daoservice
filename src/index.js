@@ -9,7 +9,7 @@ const Dao_eventSum = require('./interface/Dao_eventSum');
 const Dao_value = require('./interface/Dao_value');
 const daismAddress = require('./data/address');
 
-class DaoApi {
+class DaoService {
     unsub() {
         this.dao_register.unsub();
         this.dao_app.unsub();
@@ -31,7 +31,7 @@ class DaoApi {
     get dao_uToken() { if (!this.dao_uToken_obj) this.dao_uToken_obj = new Dao_uToken(this.web3, this.selectedAccount,daismAddress[this.network]['uToken']); return this.dao_uToken_obj; }
     get dao_eventSum() { if (!this.dao_eventSum_obj) this.dao_eventSum_obj = new Dao_eventSum(this.web3, this.selectedAccount,daismAddress[this.network]['eventSum']); return this.dao_eventSum_obj; }
  
-    get version(){return '1.0.16';}
+    get version(){return '1.0.2';}
 
     constructor(_web3, _selectAccount,_network) {
         this.web3 = _web3;
@@ -50,12 +50,4 @@ class DaoApi {
 }
 
 
-if (typeof window === 'object') {
-    window.Daoapi = function (_web3, _selectAccount,_network) {
-        return new DaoApi(_web3, _selectAccount,_network)
-    }
-
-    window.Daoapi.default = window.Daoapi;
-}
-
-module.exports = DaoApi
+module.exports = DaoService
