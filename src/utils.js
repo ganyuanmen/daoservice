@@ -1,4 +1,48 @@
 class Utils{
+   
+    async egetTime(etherProvider,blockNumber)
+    {
+        let _timestamp=(new Date()).getTime().toString().substring(0,10)
+        if(!blockNumber) return _timestamp
+        let timeObj= await etherProvider.getBlock(blockNumber);
+        if(!timeObj)  timeObj= await etherProvider.getBlock(blockNumber);
+        if(timeObj && timeObj.timestamp) _timestamp=timeObj.timestamp;
+        return _timestamp;
+    }
+
+    async egetAccount(etherProvider,transactionHash)
+    {
+        if(!transactionHash) return ""
+        let _from='';
+        let addressObj=await etherProvider.getTransactionReceipt(transactionHash);
+        if(!addressObj) addressObj=await etherProvider.getTransactionReceipt(transactionHash);
+        if(!addressObj) addressObj=await etherProvider.getTransactionReceipt(transactionHash);
+        if(addressObj && addressObj.from) _from=addressObj.from;
+        return _from;
+    }
+
+
+   async getTime(web3,blockNumber)
+    {
+     
+        let _timestamp=(new Date()).getTime().toString().substring(0,10)
+        if(!blockNumber) return _timestamp
+        let timeObj= await web3.eth.getBlock(blockNumber);
+        if(!timeObj)  timeObj= await web3.eth.getBlock(blockNumber);
+        if(timeObj && timeObj.timestamp) _timestamp=timeObj.timestamp;
+        return _timestamp;
+    }
+
+    async getAccount(web3,transactionHash)
+    {
+        if(!transactionHash) return ""
+        let _from='';
+        let addressObj=await  web3.eth.getTransactionReceipt(transactionHash);
+        if(!addressObj) addressObj=await  web3.eth.getTransactionReceipt(transactionHash);
+        if(!addressObj) addressObj=await  web3.eth.getTransactionReceipt(transactionHash);
+        if(addressObj && addressObj.from) _from=addressObj.from;
+        return _from;
+    }
 
  log(str) {
     var myDate = new Date();

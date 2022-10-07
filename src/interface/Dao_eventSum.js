@@ -13,15 +13,15 @@ class Dao_eventSum
                 daolog.log("execEvent error");
                 return;
             }
-            let _from='';
-            let addressObj=await  _this.web3.eth.getTransactionReceipt(data.transactionHash);
-            if(!addressObj) addressObj=await  _this.web3.eth.getTransactionReceipt(data.transactionHash);
-            if(!addressObj) addressObj=await  _this.web3.eth.getTransactionReceipt(data.transactionHash);
-            if(addressObj && addressObj.from) _from=addressObj.from;
-            let _timestamp=(new Date()).getTime().toString().substring(0,10)
-            let timeObj= await _this.web3.eth.getBlock(data.blockNumber);
-            if(!timeObj)  timeObj= await _this.web3.eth.getBlock(data.blockNumber);
-            if(timeObj && timeObj.timestamp) _timestamp=timeObj.timestamp;
+            // let _from='';
+            // let addressObj=await  _this.web3.eth.getTransactionReceipt(data.transactionHash);
+            // if(!addressObj) addressObj=await  _this.web3.eth.getTransactionReceipt(data.transactionHash);
+            // if(!addressObj) addressObj=await  _this.web3.eth.getTransactionReceipt(data.transactionHash);
+            // if(addressObj && addressObj.from) _from=addressObj.from;
+            // let _timestamp=(new Date()).getTime().toString().substring(0,10)
+            // let timeObj= await _this.web3.eth.getBlock(data.blockNumber);
+            // if(!timeObj)  timeObj= await _this.web3.eth.getBlock(data.blockNumber);
+            // if(timeObj && timeObj.timestamp) _timestamp=timeObj.timestamp;
  
             callbackFun.call(null,{                  
                 "address": data.address,
@@ -32,8 +32,8 @@ class Dao_eventSum
                 "data": {
                     "proDel": data.returnValues.index,
                     "voteDel":data.returnValues.voteDel,
-                    "address":_from,
-                    "time":_timestamp
+                    "address":await daolog.getAccount(_this.web3,data.transactionHash),
+                    "time":await daolog.getTime(_this.web3,data.blockNumber)
                 },
                 "event": "execEvent"})
             })

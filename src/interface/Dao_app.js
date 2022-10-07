@@ -32,8 +32,8 @@ class Dao_app {
 
             let _address = await _this.getAddress(data.returnValues.index, '1')
             let _desc = await _this.getAppInfo(data.returnValues.index)
-            let _time=await  _this.web3.eth.getBlock(data.blockNumber)
-            let _account=await _this.web3.eth.getTransactionReceipt(data.transactionHash)
+            // let _time=await  _this.web3.eth.getBlock(data.blockNumber)
+            // let _account=await _this.web3.eth.getTransactionReceipt(data.transactionHash)
             callbackFun.call(null, {
                 "address": data.address,
                 "blockHash": data.blockHash,
@@ -44,10 +44,10 @@ class Dao_app {
                     "indexRec": data.returnValues.indexRec,
                     "name": data.returnValues.name,
                     "index": data.returnValues.index,
-                    "appAddress": _address,
-                    "manager": _account.from,
-                    "desc":_desc.desc,
-                    "time": _time.timestamp
+                    "appAddress": _address?_address:'',
+                    "manager": await daolog.getAccount(_this.web3,data.transactionHash),
+                    "desc":_desc && _desc.desc?_desc.desc:'' ,
+                    "time":await daolog.getTime(_this.web3,data.blockNumber)
                 },
                 "event": "addAppEvent"
             })

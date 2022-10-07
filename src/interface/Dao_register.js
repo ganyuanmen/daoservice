@@ -36,13 +36,13 @@ async  get_A_V(_id,_address) {
             fromBlock: maxBlockNumber+1
         }, async function (_error, data) {
             if(!data || !data.returnValues) {
-                daolog.log("CreateOrgEvent error",_error);
+                daolog.log("CreateOrgEvent error:"+_error);
                 return;
             }
             let _address=await _this.valuec.getOrg(data.returnValues.daoid);
             let _info=await  _this.getInfo(data.returnValues.daoid)
             let _accounts_votes= await _this.get_A_V(data.returnValues.daoid,_address)
-            let _time=await  _this.web3.eth.getBlock(data.blockNumber)
+           // let _time=await  _this.web3.eth.getBlock(data.blockNumber)
         
    
             callbackFun.call(null,
@@ -60,7 +60,7 @@ async  get_A_V(_id,_address) {
                     "symbol":_info.symbol,
                     "describe":_info.desc,
                     "accounts_votes":_accounts_votes,
-                    "time":_time.timestamp,
+                    "time":await daolog.getTime(_this.web3,data.blockNumber),
                     "address":_address
                 }
                ,

@@ -7,9 +7,10 @@ const Dao_iadd = require('./interface/Dao_iadd');
 const Dao_uToken = require('./interface/Dao_uToken');
 const Dao_eventSum = require('./interface/Dao_eventSum');
 const Dao_value = require('./interface/Dao_value');
+const Dao_appInfo = require('./interface/Dao_appInfo');
 const daismAddress = require('./data/address');
 
-class DaoService {
+class DaoApi {
     unsub() {
         this.dao_register.unsub();
         this.dao_app.unsub();
@@ -21,7 +22,7 @@ class DaoService {
 
     }
 
-
+    get dao_appInfo() { if (!this.dao_appInfo_obj) this.dao_appInfo_obj = new Dao_appInfo(this.web3, this.selectedAccount,daismAddress[this.network]['appInfo']); return this.dao_appInfo_obj; }
     get dao_value() { if (!this.dao_value_obj) this.dao_value_obj = new Dao_value(this.web3, this.selectedAccount,daismAddress[this.network]['value']); return this.dao_value_obj; }
     get dao_register() { if (!this.dao_register_obj) this.dao_register_obj = new Dao_register(this.web3, this.selectedAccount,this.dao_value,daismAddress[this.network]['register']); return this.dao_register_obj; }
     get dao_app() { if (!this.dao_app_obj) this.dao_app_obj = new Dao_app(this.web3, this.selectedAccount,daismAddress[this.network]['app']); return this.dao_app_obj; }
@@ -31,7 +32,7 @@ class DaoService {
     get dao_uToken() { if (!this.dao_uToken_obj) this.dao_uToken_obj = new Dao_uToken(this.web3, this.selectedAccount,daismAddress[this.network]['uToken']); return this.dao_uToken_obj; }
     get dao_eventSum() { if (!this.dao_eventSum_obj) this.dao_eventSum_obj = new Dao_eventSum(this.web3, this.selectedAccount,daismAddress[this.network]['eventSum']); return this.dao_eventSum_obj; }
  
-    get version(){return '1.0.2';}
+    get version(){return '1.0.16';}
 
     constructor(_web3, _selectAccount,_network) {
         this.web3 = _web3;
@@ -46,8 +47,17 @@ class DaoService {
         this.dao_uToken_obj=null;
         this.dao_eventSum_obj=null;
         this.dao_value_obj=null;
+        this.dao_appInfo_obj=null;
     }
 }
 
 
-module.exports = DaoService
+if (typeof window === 'object') {
+    window.Daoapi = function (_web3, _selectAccount,_network) {
+        return new DaoApi(_web3, _selectAccount,_network)
+    }
+
+    window.Daoapi.default = window.Daoapi;
+}
+
+module.exports = DaoApi

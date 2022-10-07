@@ -33,12 +33,12 @@ const daolog = require("../utils");
       
         const _this = this;
         if (!this.contract) this.contract = new this.web3.eth.Contract(this.abi, this.address, {from: this.selectedAccount});
-        this.swapobjTo=this.contract.events.SwapTo({filter: {},fromBlock: maxBlockNumber+1}, function (_error, data) {
+        this.swapobjTo=this.contract.events.SwapTo({filter: {},fromBlock: maxBlockNumber+1},async function (_error, data) {
             if(!data || !data.returnValues) {
                 daolog.log("swapEvent error");
                 return;
             }
-            _this.web3.eth.getTransactionReceipt(data.transactionHash).then(eobj=>{
+           // _this.web3.eth.getTransactionReceipt(data.transactionHash).then(eobj=>{
             callbackFun.call(null,{                  
                 "address": data.address,
                 "blockHash": data.blockHash,
@@ -46,14 +46,14 @@ const daolog = require("../utils");
                 "transactionHash": data.transactionHash,
                 "transactionIndex":data.transactionIndex,
                 "data": {
-                    "address": eobj.from,
+                    "address":await daolog.getAccount(_this.web3,data.transactionHash),
                     "to": data.returnValues[1],
                     "ethAmount":parseFloat(_this.web3.utils.fromWei(data.returnValues[2],'ether')).toFixed(4), 
                     "utokenAmount":parseFloat(_this.web3.utils.fromWei(data.returnValues[3],'ether')).toFixed(4),
                     "swapTime":data.returnValues[4]
                 },
                 "event": "swapToEvent"})
-            })
+          // })
         })
     }
 
@@ -65,6 +65,7 @@ const daolog = require("../utils");
                 daolog.log("swapDethEvent error");
                 return;
             }
+           // console.log(data)
             callbackFun.call(null,{                  
                 "address": data.address,
                 "blockHash": data.blockHash,

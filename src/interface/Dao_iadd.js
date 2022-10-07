@@ -2,15 +2,16 @@ const iadd_abi=require('../data/iadd_abi');
 const daolog = require("../utils");
 class Dao_iadd
 {
+      
     utokenTotokenEvent(maxBlockNumber,callbackFun) {
         const _this = this;
         if (!this.contract) this.contract = new this.web3.eth.Contract(this.abi, this.address, {from: this.selectedAccount});
-        this.u2tObj=this.contract.events.UToToken({filter: {},fromBlock: maxBlockNumber+1}, function (_error, data) {
+        this.u2tObj=this.contract.events.UToToken({filter: {},fromBlock: maxBlockNumber+1},async function (_error, data) {
             if(!data || !data.returnValues) {
                 daolog.log("utokenTotokenEvent error");
                 return;
             }
-            _this.web3.eth.getBlock(data.blockNumber).then(ee=>{
+           //_this.web3.eth.getBlock(data.blockNumber).then(ee=>{
                 callbackFun.call(null,{                  
                     "address": data.address,
                     "blockHash": data.blockHash,
@@ -20,7 +21,7 @@ class Dao_iadd
                     "data": {
                         "from": data.returnValues.spender,
                         "to": data.returnValues.to,
-                        "swap_time":ee.timestamp,
+                        "swap_time":await daolog.getTime(_this.web3,data.blockNumber),
                         "tokenId":data.returnValues.id,
                         "utokenWei":data.returnValues.uAmount,
                         "tokenWei":data.returnValues.tokenAmount,
@@ -28,19 +29,19 @@ class Dao_iadd
                         "token":parseFloat(_this.web3.utils.fromWei(data.returnValues.tokenAmount,'ether')).toFixed(4)
                     },
                     "event": "utokenTotokenEvent"})
-            })
+          //  })
         })
     }
 
     tokenToUtokenEvent(maxBlockNumber,callbackFun) {
         const _this = this;
         if (!this.contract) this.contract = new this.web3.eth.Contract(this.abi, this.address, {from: this.selectedAccount});
-        this.t2uObj=this.contract.events.TokenToU({filter: {}, fromBlock: maxBlockNumber+1}, function (_error, data) {  
+        this.t2uObj=this.contract.events.TokenToU({filter: {}, fromBlock: maxBlockNumber+1}, async function (_error, data) {  
             if(!data || !data.returnValues) {
                 daolog.log("tokenToUtokenEvent error");
                 return;
             }   
-            _this.web3.eth.getBlock(data.blockNumber).then(ee=>{
+         //   _this.web3.eth.getBlock(data.blockNumber).then(ee=>{
             callbackFun.call(null,{                  
                 "address": data.address,
                 "blockHash": data.blockHash,
@@ -50,7 +51,7 @@ class Dao_iadd
                 "data": {
                     "from": data.returnValues.spender,
                     "to": data.returnValues.to,
-                    "swap_time":ee.timestamp,
+                    "swap_time":await daolog.getTime(_this.web3,data.blockNumber),
                     "tokenId":data.returnValues.id,
                     "utokenWei":data.returnValues.uAmount,
                     "tokenWei":data.returnValues.tokenAmount,
@@ -58,7 +59,7 @@ class Dao_iadd
                     "token":parseFloat(_this.web3.utils.fromWei(data.returnValues.tokenAmount,'ether')).toFixed(4)
                 },
                 "event": "tokenToUtokenEvent"})
-            })
+           // })
         })
     }
 
@@ -66,12 +67,12 @@ class Dao_iadd
         const _this = this;
         if (!this.contract) this.contract = new this.web3.eth.Contract(this.abi, this.address, {from: this.selectedAccount});
       
-        this.t2tObj=this.contract.events.ETokenToToken({filter: {}, fromBlock: maxBlockNumber+1}, function (_error, data) {  
+        this.t2tObj=this.contract.events.ETokenToToken({filter: {}, fromBlock: maxBlockNumber+1},async function (_error, data) {  
             if(!data || !data.returnValues) {
                 daolog.log("tokenTotokenEvent error");
                 return;
             }   
-            _this.web3.eth.getBlock(data.blockNumber).then(ee=>{
+          //  _this.web3.eth.getBlock(data.blockNumber).then(ee=>{
             callbackFun.call(null,{                  
                 "address": data.address,
                 "blockHash": data.blockHash,
@@ -81,7 +82,7 @@ class Dao_iadd
                 "data": {
                     "from": data.returnValues.spender,
                     "to": data.returnValues.to,
-                    "swap_time":ee.timestamp,
+                    "swap_time":await daolog.getTime(_this.web3,data.blockNumber),
                     "fromTokenId":data.returnValues.id,
                     "toTokenId":data.returnValues.swapid,
                     "fromtokenWei":data.returnValues.tokenAmount,
@@ -90,7 +91,7 @@ class Dao_iadd
                     "toToken":parseFloat(_this.web3.utils.fromWei(data.returnValues.swapTokenAmount,'ether')).toFixed(4)
                 },
                 "event": "tokenTotokenEvent"})
-            })
+          //  })
         })
     }
 
